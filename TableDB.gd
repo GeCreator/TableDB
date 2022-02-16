@@ -34,7 +34,9 @@ func insert(data:Dictionary):
 		_db.set_value(id, k, data[k])
 
 func remove(id:String):
-	_db.erase_section('id')
+	if has(id):
+		_db.erase_section(id)
+
 
 func has(id: String) -> bool:
 	return _db.has_section(id) 
