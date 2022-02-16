@@ -37,7 +37,7 @@ func remove(id:String):
 	_db.erase_section('id')
 
 func has(id: String) -> bool:
-	return _db.has_section('id') 
+	return _db.has_section(id) 
 
 func find(id: String) -> Dictionary:
 	var result: Dictionary
