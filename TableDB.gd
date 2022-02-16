@@ -30,6 +30,7 @@ func insert(data:Dictionary):
 	var id: String
 	if 'id' in data:
 		id = str(data['id'])
+		data.erase('id')
 	else:
 		_last_insert_id+=1
 		id = str(_last_insert_id)
