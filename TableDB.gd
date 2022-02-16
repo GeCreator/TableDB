@@ -23,6 +23,7 @@ func _init(dbpath:String, password: String=''):
 func _detect_last_insert_id():
 	for id in _db.get_sections():
 		_count+=1
+		if not (id as String).is_valid_integer(): continue
 		if int(id)>_last_insert_id:
 			_last_insert_id = int(id)
 
