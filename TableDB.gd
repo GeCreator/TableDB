@@ -40,6 +40,7 @@ func insert(data:Dictionary):
 
 func remove(id:String):
 	if has(id):
+		_count -= 1
 		_db.erase_section(id)
 
 func count() -> int:
