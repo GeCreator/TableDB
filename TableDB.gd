@@ -6,14 +6,7 @@ var _path: String
 var _last_insert_id: int
 var _password: String = ''
 
-
-func _detect_last_insert_id():
-	for id in _db.get_sections():
-		if int(id)>_last_insert_id:
-			_last_insert_id = int(id)
-
 func _init(dbpath:String, password: String=''):
-	
 	_db = ConfigFile.new()
 	_path = dbpath
 	if (File.new()).file_exists(_path):
@@ -23,6 +16,11 @@ func _init(dbpath:String, password: String=''):
 			_password = password.md5_text()
 			_db.load_encrypted_pass(_path, _password)
 	_detect_last_insert_id()
+
+func _detect_last_insert_id():
+	for id in _db.get_sections():
+		if int(id)>_last_insert_id:
+			_last_insert_id = int(id)
 
 func insert(data:Dictionary):
 	var id: String
