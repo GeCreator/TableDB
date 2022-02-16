@@ -1,7 +1,6 @@
 class_name TableDB
 extends Reference
 
-var _db:ConfigFile
 var _db: ConfigFile
 var _path: String
 var _last_insert_id: int
