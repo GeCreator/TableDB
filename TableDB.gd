@@ -10,11 +10,13 @@ var _count: int = 0
 func _init(dbpath:String, password: String=''):
 	_db = ConfigFile.new()
 	_path = dbpath
+	if password!='':
+		_password = password.md5_text()
+
 	if (File.new()).file_exists(_path):
-		if password=='':
+		if _password=='':
 			_db.load(_path)
 		else:
-			_password = password.md5_text()
 			_db.load_encrypted_pass(_path, _password)
 	_detect_last_insert_id()
 
