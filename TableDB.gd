@@ -2,9 +2,11 @@ class_name TableDB
 extends Reference
 
 var _db:ConfigFile
+var _db: ConfigFile
 var _path: String
 var _last_insert_id: int
 var _password: String = ''
+var _count: int = 0
 
 func _init(dbpath:String, password: String=''):
 	_db = ConfigFile.new()
@@ -19,6 +21,7 @@ func _init(dbpath:String, password: String=''):
 
 func _detect_last_insert_id():
 	for id in _db.get_sections():
+		_count+=1
 		if int(id)>_last_insert_id:
 			_last_insert_id = int(id)
 
@@ -30,6 +33,8 @@ func insert(data:Dictionary):
 		_last_insert_id+=1
 		id = str(_last_insert_id)
 	
+	if not has(id): _count +=1
+	
 	for k in data:
 		_db.set_value(id, k, data[k])
 
@@ -37,6 +42,8 @@ func remove(id:String):
 	if has(id):
 		_db.erase_section(id)
 
+func count() -> int:
+	return _count
 
 func has(id: String) -> bool:
 	return _db.has_section(id) 
