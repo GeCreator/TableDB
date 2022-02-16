@@ -45,6 +45,10 @@ func remove(id:String):
 func count() -> int:
 	return _count
 
+func truncate():
+	_db = ConfigFile.new()
+	_count = 0
+
 func has(id: String) -> bool:
 	return _db.has_section(id) 
 
