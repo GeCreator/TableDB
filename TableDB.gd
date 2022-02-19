@@ -85,10 +85,63 @@ func save():
 
 
 class Query:
+	var _conditions: Array
+
 	var _db: TableDB
 	func _init(db: TableDB):
 		_db = db
 	
+	func where(field: String, condition: String, equal) -> Query:
+		_conditions.append(Condition.new(field, condition, equal))
+		return self
+	
 	# execute query and return result
 	func get(s: String = '') -> Array:
-		return []
+		var result: Array
+		for row in _db.all():
+			var passing: bool = true
+			for c in _conditions:
+				passing = passing && (c as Condition).check(row)
+			
+			if passing: result.append(row)
+		return result
+	
+	class Condition:
+		const TYPE_EQUAL = 0
+		const TYPE_NOT_EQUAL = 1
+		const TYPE_GREATER = 2
+		const TYPE_GREATER_OR_EQUAL = 3
+		const TYPE_LOWER = 4
+		const TYPE_LOWER_OR_EQUAL = 5
+		
+		var _type: int
+		var _field: String
+		var _equal
+		
+		func _init(field: String, condition: String, equal):
+			_field = field
+			_equal = equal
+			match(condition):
+				'=':  _type = TYPE_EQUAL
+				'!=': _type = TYPE_NOT_EQUAL
+				'>':  _type = TYPE_GREATER
+				'>=': _type = TYPE_GREATER_OR_EQUAL
+				'<':  _type = TYPE_LOWER
+				'<=': _type = TYPE_LOWER_OR_EQUAL
+				_: printerr('unknow condition type "%s"' % condition)
+		
+		func check(data: Dictionary) -> bool:
+			if not data.has(_field): return false
+			if _type == TYPE_EQUAL:
+				return data[_field] == _equal
+			elif _type == TYPE_NOT_EQUAL:
+				return data[_field] != _equal
+			elif _type == TYPE_GREATER:
+				return data[_field]>_equal
+			elif _type == TYPE_GREATER_OR_EQUAL:
+				return data[_field]>=_equal
+			elif _type == TYPE_LOWER:
+				return data[_field]<_equal
+			elif _type == TYPE_LOWER_OR_EQUAL:
+				return data[_field]<=_equal
+			return false
