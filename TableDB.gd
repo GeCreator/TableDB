@@ -62,6 +62,11 @@ func find(id: String) -> Dictionary:
 		result[key] = _db.get_value(id, key)
 	return result
 
+func query() -> Query:
+	var query = Query.new(self)
+	return query
+
+
 func all() -> Array:
 	var result: Array
 	for id in _db.get_sections():
@@ -77,3 +82,9 @@ func save():
 		_db.save(_path)
 	else:
 		_db.save_encrypted_pass(_path, _password)
+
+
+class Query:
+	var _db: TableDB
+	func _init(db: TableDB):
+		_db = db
