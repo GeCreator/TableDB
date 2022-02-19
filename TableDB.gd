@@ -88,3 +88,7 @@ class Query:
 	var _db: TableDB
 	func _init(db: TableDB):
 		_db = db
+	
+	# execute query and return result
+	func get(s: String = '') -> Array:
+		return []
