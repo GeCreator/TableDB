@@ -65,7 +65,6 @@ func query() -> Query:
 	var query = Query.new(self)
 	return query
 
-
 func all() -> Array:
 	var result: Array
 	for id in _db.get_sections():
@@ -93,6 +92,11 @@ class Query:
 	func where(field: String, condition: String, equal) -> Query:
 		_conditions.append(Condition.new(field, condition, equal))
 		return self
+	
+	func update(values: Dictionary):
+		for row in get():
+			values['id'] = row['id']
+			_db.insert(values)
 	
 	# execute query and return result
 	func get(s: String = '') -> Array:
