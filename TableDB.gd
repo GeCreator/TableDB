@@ -18,9 +18,8 @@ func _init(dbpath:String, password: String=''):
 			_db.load(_path)
 		else:
 			_db.load_encrypted_pass(_path, _password)
-	_detect_last_insert_id()
-
-func _detect_last_insert_id():
+	
+	# detect_last_insert_id
 	for id in _db.get_sections():
 		_count+=1
 		if not (id as String).is_valid_integer(): continue
