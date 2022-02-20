@@ -106,6 +106,9 @@ class Query:
 		for row in get():
 			_db.remove(row['id'])
 	
+	func count() -> int:
+		return get().size()
+	
 	# execute query and return result
 	func get(s: String = '') -> Array:
 		var result: Array
