@@ -83,8 +83,7 @@ func save():
 
 # return query builder
 func _get_query() -> Query:
-	var query = Query.new(self)
-	return query
+	return Query.new(self)
 	
 
 class Query:
