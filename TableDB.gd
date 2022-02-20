@@ -103,6 +103,10 @@ class Query:
 			values['id'] = row['id']
 			_db.insert(values)
 	
+	func delete():
+		for row in get():
+			_db.remove(row['id'])
+	
 	# execute query and return result
 	func get(s: String = '') -> Array:
 		var result: Array
