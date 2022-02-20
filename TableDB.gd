@@ -140,16 +140,11 @@ class Query:
 		
 		func check(data: Dictionary) -> bool:
 			if not data.has(_field): return false
-			if _type == TYPE_EQUAL:
-				return data[_field] == _equal
-			elif _type == TYPE_NOT_EQUAL:
-				return data[_field] != _equal
-			elif _type == TYPE_GREATER:
-				return data[_field]>_equal
-			elif _type == TYPE_GREATER_OR_EQUAL:
-				return data[_field]>=_equal
-			elif _type == TYPE_LOWER:
-				return data[_field]<_equal
-			elif _type == TYPE_LOWER_OR_EQUAL:
-				return data[_field]<=_equal
+			match (_type):
+				TYPE_EQUAL: return data[_field] == _equal
+				TYPE_NOT_EQUAL: return data[_field] != _equal
+				TYPE_GREATER: return data[_field]>_equal
+				TYPE_GREATER_OR_EQUAL: return data[_field]>=_equal
+				TYPE_LOWER: return data[_field]<_equal
+				TYPE_LOWER_OR_EQUAL: return data[_field]<=_equal
 			return false
