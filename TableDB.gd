@@ -1,6 +1,7 @@
 class_name TableDB
 extends Reference
 
+signal changed
 
 var _db: ConfigFile
 var _path: String
@@ -11,6 +12,7 @@ var _count: int = 0
 func _init(dbpath:String, password: String=''):
 	_db = ConfigFile.new()
 	_path = dbpath
+	
 	if password!='':
 		_password = password.md5_text()
 
@@ -103,19 +105,19 @@ class Query:
 		return self
 	
 	func update(values: Dictionary):
-		for row in get():
+		for row in take():
 			values['id'] = row['id']
 			_db.insert(values)
 	
 	func delete():
-		for row in get():
+		for row in take():
 			_db.remove(row['id'])
 	
 	func count() -> int:
-		return get().size()
+		return take().size()
 	
 	# execute query and return result
-	func get(s: String = '') -> Array:
+	func take(limit: int = 0, offset: int = 0) -> Array:
 		var result: Array
 		for row in _db.all():
 			var passing: bool = true
