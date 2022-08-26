@@ -68,10 +68,6 @@ func find(id: String) -> Dictionary:
 		result[key] = _db.get_value(id, key)
 	return result
 
-
-func where(field: String, condition: String, equal) -> Query:
-	return _get_query().where(field, condition, equal)
-
 func all() -> Array:
 	var result: Array
 	for id in _db.get_sections():
@@ -88,10 +84,10 @@ func save():
 	else:
 		_db.save_encrypted_pass(_path, _password)
 
-# return query builder
-func _get_query() -> Query:
+
+func query() -> Query:
 	return Query.new(self)
-	
+
 
 class Query:
 	var _conditions: Array
