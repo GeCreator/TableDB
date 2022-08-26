@@ -130,7 +130,7 @@ class Query:
 			limit-=1
 			var passing: bool = true
 			for c in _conditions:
-				passing = passing && (c as Condition).check(row)
+				passing = passing && c.check(row)
 			
 			if passing: result.append(row)
 			if limit==0: break
@@ -153,6 +153,20 @@ class Query:
 	
 	func _sort_by_desc(a, b):
 		return a[_order_field] > b[_order_field]
+		
+	
+	func whereCustom(function: FuncRef) -> Query:
+		_conditions.append(ConditionCustom.new(function))
+		return self
+	
+	class ConditionCustom:
+		var _function: FuncRef
+		func _init(function: FuncRef):
+			_function = function
+		
+		func check(data:Dictionary) -> bool:
+			return _function.call_func(data)
+
 	
 	class Condition:
 		const TYPE_EQUAL = 0
