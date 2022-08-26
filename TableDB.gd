@@ -84,10 +84,8 @@ func save():
 	else:
 		_db.save_encrypted_pass(_path, _password)
 
-
 func query() -> Query:
 	return Query.new(self)
-
 
 class Query:
 	var _conditions: Array
@@ -103,22 +101,21 @@ class Query:
 	func where(field: String, condition: String, equal) -> Query:
 		_conditions.append(Condition.new(field, condition, equal))
 		return self
-	
-	
+
 	func update(values: Dictionary):
 		for row in take():
 			values['id'] = row['id']
 			_db.insert(values)
-	
+
 	func delete():
 		for row in take():
 			_db.remove(row['id'])
-	
+
 	func count() -> int:
 		return take().size()
-	
+
 	# execute query and return result
-	func take(limit: int = 0, offset: int = 0) -> Array:
+	func take(limit: int = -1, offset: int = 0) -> Array:
 		var result: Array
 		var list: Array = _db.all()
 		match(_order):
@@ -127,11 +124,17 @@ class Query:
 			'custom': list.sort_custom(_custom_order_object, _custom_order_function)
 		
 		for row in list:
+			if offset>0:
+				offset-=1
+				continue
+			limit-=1
 			var passing: bool = true
 			for c in _conditions:
 				passing = passing && (c as Condition).check(row)
 			
 			if passing: result.append(row)
+			if limit==0: break
+			
 		return result
 	
 	func orderyBy(field: String, direction: String = 'asc') -> Query:
