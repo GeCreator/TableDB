@@ -99,7 +99,13 @@ class Query:
 		_db = db
 	
 	func where(field: String, condition: String, equal) -> Query:
-		_conditions.append(Condition.new(field, condition, equal))
+		match(condition):
+				'=': _conditions.append(ConditionEqual.new(field, equal))
+				'!=': _conditions.append(ConditionNotEqual.new(field, equal))
+				'>':  _conditions.append(ConditionGreater.new(field, equal))
+				'>=':  _conditions.append(ConditionGreaterOrEqual.new(field, equal))
+				'<': _conditions.append(ConditionLower.new(field, equal))
+				'<=': _conditions.append(ConditionLowerOrEqual.new(field, equal))
 		return self
 
 	func update(values: Dictionary):
@@ -166,39 +172,41 @@ class Query:
 		
 		func check(data:Dictionary) -> bool:
 			return _function.call_func(data)
-
 	
-	class Condition:
-		const TYPE_EQUAL = 0
-		const TYPE_NOT_EQUAL = 1
-		const TYPE_GREATER = 2
-		const TYPE_GREATER_OR_EQUAL = 3
-		const TYPE_LOWER = 4
-		const TYPE_LOWER_OR_EQUAL = 5
-		
-		var _type: int
+	class ConditionBase:
 		var _field: String
 		var _equal
-		
-		func _init(field: String, condition: String, equal):
+		func _init(field: String, equal):
 			_field = field
 			_equal = equal
-			match(condition):
-				'=':  _type = TYPE_EQUAL
-				'!=': _type = TYPE_NOT_EQUAL
-				'>':  _type = TYPE_GREATER
-				'>=': _type = TYPE_GREATER_OR_EQUAL
-				'<':  _type = TYPE_LOWER
-				'<=': _type = TYPE_LOWER_OR_EQUAL
-				_: printerr('unknow condition type "%s"' % condition)
-		
+	
+	class ConditionEqual extends ConditionBase:
+		func _init(field: String, equal).(field, equal): pass
 		func check(data: Dictionary) -> bool:
-			if not data.has(_field): return false
-			match (_type):
-				TYPE_EQUAL: return data[_field] == _equal
-				TYPE_NOT_EQUAL: return data[_field] != _equal
-				TYPE_GREATER: return data[_field]>_equal
-				TYPE_GREATER_OR_EQUAL: return data[_field]>=_equal
-				TYPE_LOWER: return data[_field]<_equal
-				TYPE_LOWER_OR_EQUAL: return data[_field]<=_equal
-			return false
+			return data.has(_field) and data[_field] == _equal
+	
+	class ConditionNotEqual extends ConditionBase:
+		func _init(field: String, equal).(field, equal): pass
+		func check(data: Dictionary) -> bool:
+			return data.has(_field) and data[_field] != _equal
+	
+	class ConditionGreater extends ConditionBase:
+		func _init(field: String, equal).(field, equal): pass
+		func check(data: Dictionary) -> bool:
+			return data.has(_field) and data[_field] > _equal
+	
+	class ConditionGreaterOrEqual extends ConditionBase:
+		func _init(field: String, equal).(field, equal): pass
+		func check(data: Dictionary) -> bool:
+			return data.has(_field) and data[_field] >= _equal
+
+	class ConditionLower extends ConditionBase:
+		func _init(field: String, equal).(field, equal): pass
+		func check(data: Dictionary) -> bool:
+			return data.has(_field) and data[_field] < _equal
+
+	class ConditionLowerOrEqual extends ConditionBase:
+		func _init(field: String, equal).(field, equal): pass
+		func check(data: Dictionary) -> bool:
+			return data.has(_field) and data[_field] <= _equal
+
