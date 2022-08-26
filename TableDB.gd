@@ -91,6 +91,10 @@ func query() -> Query:
 
 class Query:
 	var _conditions: Array
+	var _order
+	var _order_field: String
+	var _custom_order_object
+	var _custom_order_function: String
 
 	var _db: TableDB
 	func _init(db: TableDB):
@@ -99,6 +103,7 @@ class Query:
 	func where(field: String, condition: String, equal) -> Query:
 		_conditions.append(Condition.new(field, condition, equal))
 		return self
+	
 	
 	func update(values: Dictionary):
 		for row in take():
@@ -115,13 +120,36 @@ class Query:
 	# execute query and return result
 	func take(limit: int = 0, offset: int = 0) -> Array:
 		var result: Array
-		for row in _db.all():
+		var list: Array = _db.all()
+		match(_order):
+			'asc': list.sort_custom(self, "_sort_by_asc")
+			'desc': list.sort_custom(self, "_sort_by_desc")
+			'custom': list.sort_custom(_custom_order_object, _custom_order_function)
+		
+		for row in list:
 			var passing: bool = true
 			for c in _conditions:
 				passing = passing && (c as Condition).check(row)
 			
 			if passing: result.append(row)
 		return result
+	
+	func orderyBy(field: String, direction: String = 'asc') -> Query:
+		_order_field = field
+		_order = direction.to_lower()
+		return self
+	
+	func orderByCustom(object, function: String) -> Query:
+		_custom_order_object = object
+		_custom_order_function = function
+		_order = 'custom'
+		return self
+	
+	func _sort_by_asc(a, b):
+		return a[_order_field] < b[_order_field]
+	
+	func _sort_by_desc(a, b):
+		return a[_order_field] > b[_order_field]
 	
 	class Condition:
 		const TYPE_EQUAL = 0
