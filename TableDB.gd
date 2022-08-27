@@ -113,6 +113,10 @@ class Query:
 				'<': _conditions.append(ConditionLower.new(field, equal))
 				'<=': _conditions.append(ConditionLowerOrEqual.new(field, equal))
 		return self
+	
+	func whereCustom(function: FuncRef) -> Query:
+		_conditions.append(ConditionCustom.new(function))
+		return self
 
 	func update(values: Dictionary):
 		for row in take():
@@ -174,10 +178,6 @@ class Query:
 	func _sort_by_desc(a, b):
 		return a[_order_field] > b[_order_field]
 		
-	
-	func whereCustom(function: FuncRef) -> Query:
-		_conditions.append(ConditionCustom.new(function))
-		return self
 	
 	class ConditionCustom:
 		var _function: FuncRef
