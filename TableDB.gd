@@ -45,11 +45,13 @@ func insert(data:Dictionary) -> String:
 	emit_signal("changed")
 	return id
 
-func remove(id:String):
+func remove(id:String) -> bool:
 	if has(id):
 		_count -= 1
 		_db.erase_section(id)
-	emit_signal("changed")
+		emit_signal("changed")
+		return true
+	return false
 
 func count() -> int:
 	return _count
