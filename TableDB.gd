@@ -86,10 +86,12 @@ func save():
 	else:
 		_db.save_encrypted_pass(_path, _password)
 
-func query() -> Query:
-	return Query.new(self)
+func select(fields: Array = []) -> Query:
+	return Query.new(self, fields)
 
 class Query:
+	var _selection_fields: Array
+	var _use_selection_fields: bool = false
 	var _conditions: Array
 	var _order
 	var _order_field: String
@@ -97,7 +99,9 @@ class Query:
 	var _custom_order_function: String
 
 	var _db: TableDB
-	func _init(db: TableDB):
+	func _init(db: TableDB, fields: Array):
+		_use_selection_fields = fields.size()>0
+		_selection_fields = fields
 		_db = db
 	
 	func where(field: String, condition: String, equal) -> Query:
@@ -140,8 +144,16 @@ class Query:
 			for c in _conditions:
 				passing = passing && c.check(row)
 			
-			if passing: result.append(row)
-			if limit==0: break
+			if passing:
+				if _use_selection_fields:
+					var filtred_row: Dictionary = {}
+					for f in _selection_fields:
+						if row.has(f):
+							filtred_row[f] = row[f]
+					result.append(filtred_row)
+				else:
+					result.append(row)
+				if limit==0: break
 			
 		return result
 	
