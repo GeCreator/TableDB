@@ -126,9 +126,12 @@ class Query:
 			_db.insert(values)
 		return updated_count
 
-	func delete():
+	func delete() -> int:
+		var deleted_count: int = 0
 		for row in take():
+			deleted_count+=1
 			_db.remove(row['id'])
+		return deleted_count
 
 	func count() -> int:
 		return take().size()
