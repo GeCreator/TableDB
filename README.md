@@ -15,15 +15,14 @@ db.count() # int
 # return all rows [{id=1, name="hello", description='world'}, ...]
 db.all() # Array
 
-# check if row with id=2 exists
-db.has(2) # true 
-db.has(4) # false
+# check if row with id=2 exists (true)
+db.has(2) # bool
 
-# find by id
-db.find(2) # {id=2, name="second", description='row'}
+# find by id ( return {id=2, name="second", description='row'})
+db.find(2) # Dictionary
 
-# remove by id
-db.remove(id)
+# remove by id (return true if row was deleted)
+db.remove(2) # bool
 
 # save all changes to disk
 db.save()
