@@ -118,10 +118,13 @@ class Query:
 		_conditions.append(ConditionCustom.new(function))
 		return self
 
-	func update(values: Dictionary):
+	func update(values: Dictionary) -> int:
+		var updated_count: int = 0
 		for row in take():
+			updated_count+= 1
 			values['id'] = row['id']
 			_db.insert(values)
+		return updated_count
 
 	func delete():
 		for row in take():
