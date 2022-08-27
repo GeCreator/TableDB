@@ -33,7 +33,7 @@ Simple database that store you data in Config File format. One file - one table.
 ____
 
 ##### example 1
-```
+```gdscript
 var db = TableDB.new("user://my.db")
 db.insert({name='hello', description='world'})
 db.insert({name='second', description='row'})
@@ -55,7 +55,7 @@ db.save()
 ```
 ##### example 2
 
-```
+```gdscript
 func _ready():
   var db = TableDB.new("user://my.db")
   for i in range(100):
