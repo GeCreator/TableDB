@@ -24,11 +24,11 @@
 | count() | int | Return selected count |
 | orderyBy(field: String, direction: String = 'asc') | TableDB.Query | Set sort by field (direction: 'asc'/'desc') |
 | orderByCustom(object, function: String) | TableDB.Query | Use custom sort function |
-| take(limit: int = -1, offset: int = 0) | Array | Return query result |
+| take(limit: int, offset: int) | Array | Return query result |
 
 ____
 
-##### simple example
+##### example 1
 ```
 var db = TableDB.new("user://my.db")
 db.insert({name='hello', description='world'})
@@ -49,5 +49,26 @@ db.remove(2) # true
 # save all changes to disk
 db.save()
 ```
+##### example 2
+
+```
+func _ready():
+  var db = TableDB.new("user://my.db")
+  for i in range(100):
+    db.insert({name='hello', value=randi()%10})
+
+  db.select(['name']).take(5)
+  db.select(['name']).orderBy('id','desc').take(5,4)
+  db.select().where('value','<',5).take()
+  db.select().where('value','>=',7).update({name='updated_name'})
+  db.select().where('id','>',2).where('id','<',4).delete()
+  db.select().whereCustom(funcref(self, '_where_custom')).take()
+  
+  
+  
+func _where_custom(data: Dictionary):
+  return data["name"]=='hello'
+```
+
 
 
