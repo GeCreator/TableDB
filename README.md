@@ -1,10 +1,14 @@
 ![icon](https://user-images.githubusercontent.com/12999437/186977912-32173e22-1325-41bc-94e0-30612efe181e.png)
-### TableDB
+### TableDB 
+> Godot 3.5+ addon
+
+Simple database that store you data in Config File format. One file - one table.
 
 ### API (TableDB)
 
 | method  | return type | description |
 | ------------- | ------------- | ------------- |
+| _init(dbpath:String, password: String)| TableDB | Database can be encripted if you set password |
 | insert(data: Dictionary)  | int  | Add new row and return id |
 | remove(id: int)  | bool  | Remove row by id  |
 | has(id: int)  | bool  | Check if row exists |
@@ -63,9 +67,7 @@ func _ready():
   db.select().where('value','>=',7).update({name='updated_name'})
   db.select().where('id','>',2).where('id','<',4).delete()
   db.select().whereCustom(funcref(self, '_where_custom')).take()
-  
-  
-  
+    
 func _where_custom(data: Dictionary):
   return data["name"]=='hello'
 ```
