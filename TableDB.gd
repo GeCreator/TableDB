@@ -168,7 +168,7 @@ class Query:
 			
 		return result
 	
-	func orderyBy(field: String, direction: String = 'asc') -> Query:
+	func orderBy(field: String, direction: String = 'asc') -> Query:
 		_order_field = field
 		_order = direction.to_lower()
 		return self
