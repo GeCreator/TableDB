@@ -9,10 +9,10 @@ Simple database that store you data in Config File format. One file - one table.
 | method  | return type | description |
 | ------------- | ------------- | ------------- |
 | _init(dbpath:String, password: String)| TableDB | Database can be encripted if you set password |
-| insert(data: Dictionary)  | int  | Add new row and return id |
-| remove(id: int)  | bool  | Remove row by id  |
-| has(id: int)  | bool  | Check if row exists |
-| find(id: int)  | Dictionary  | Find row by id |
+| insert(data: Dictionary)  | String  | Add new row and return id |
+| remove(id: String)  | bool  | Remove row by id  |
+| has(id: String)  | bool  | Check if row exists |
+| find(id: String)  | Dictionary  | Find row by id |
 | all()  | Array  | Return all rows |
 | count()  | int  | Return total rows count |
 | save()  | null  | Save all changes to disk |
@@ -22,6 +22,8 @@ Simple database that store you data in Config File format. One file - one table.
 | method  | return type | description |
 | ------------- | ------------- | ------------- |
 | where(field: String, condition: String, equal)  | TableDB.Query | Add filtration condition for query (AND) |
+| whereIn(field: String, equal: Array)  | TableDB.Query |  |
+| whereNotIn(field: String, equal: Array)  | TableDB.Query |  |
 | whereCustom(function: FuncRef)  | TableDB.Query | Add custom WHERE. Filtration function must have one argument and return true/false |
 | update(values: Dictionary) | int | Set new "values" for selected rows and return changed count |
 | delete() | int | Delete selected rows and return deleted count |
