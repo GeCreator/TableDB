@@ -26,7 +26,6 @@ func _init(dbpath:String, password: String=''):
 	# detect_last_insert_id
 	for id in _db.get_sections():
 		_count+=1
-		if not (id as String).is_valid_integer(): continue
 		if int(id)>_last_insert_id:
 			_last_insert_id = int(id)
 
@@ -39,17 +38,17 @@ func insert(data:Dictionary) -> String:
 		_last_insert_id+=1
 		id = str(_last_insert_id)
 	
-	if not has(id): _count +=1
+	if not has(int(id)): _count +=1
 	
 	for k in data:
 		_db.set_value(id, k, data[k])
 	emit_signal("changed")
 	return id
 
-func remove(id:String) -> bool:
+func remove(id:int) -> bool:
 	if has(id):
 		_count -= 1
-		_db.erase_section(id)
+		_db.erase_section(str(id))
 		emit_signal("changed")
 		return true
 	return false
@@ -62,8 +61,8 @@ func truncate():
 	_count = 0
 	emit_signal("changed")
 
-func has(id: String) -> bool:
-	return _db.has_section(id) 
+func has(id: int) -> bool:
+	return _db.has_section(str(id)) 
 
 func find(id: String) -> Dictionary:
 	var result: Dictionary
@@ -75,7 +74,7 @@ func all() -> Array:
 	var result: Array
 	for id in _db.get_sections():
 		var row: Dictionary
-		row['id'] = id
+		row['id'] = int(id) if id.is_valid_integer() else id
 		for key in _db.get_section_keys(id):
 			row[key] = _db.get_value(id, key)
 		result.append(row)
