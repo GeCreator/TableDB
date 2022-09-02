@@ -61,11 +61,18 @@ db.save()
 func _ready():
   var db = TableDB.new("user://my.db")
   for i in range(100):
-    db.insert({name='hello', value=randi()%10})
-
+    db.insert({name='hello'+str(i), value=randi()%10})
+  
   db.select(['name']).take(5)
-  db.select(['name']).orderBy('id','desc').take(5,4)
-  db.select().where('value','<',5).take()
+  # [{name:hello0}, {name:hello1}, {name:hello2}, {name:hello3}, {name:hello4}]
+
+  db.select(['id']).orderBy('id','desc').take(5,4)
+  # [{id:95}, {id:94}, {id:93}, {id:92}, {id:91}]
+
+  db.select(['value']).where('value','<',5).take()
+  # [{value:0}, {value:0}, {value:2}, {value:3}, {value:2}, {value:1}, {value:1}, {value:4} ...]
+  
+  
   db.select().where('value','>=',7).update({name='updated_name'})
   db.select().where('id','>',2).where('id','<',4).delete()
   db.select().whereCustom(funcref(self, '_where_custom')).take()
