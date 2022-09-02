@@ -74,7 +74,7 @@ func all() -> Array:
 	var result: Array
 	for id in _db.get_sections():
 		var row: Dictionary
-		row['id'] = int(id) if id.is_valid_integer() else id
+		row['id'] = int(id)
 		for key in _db.get_section_keys(id):
 			row[key] = _db.get_value(id, key)
 		result.append(row)
