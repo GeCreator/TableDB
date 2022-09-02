@@ -2,7 +2,7 @@
 ### TableDB 
 > Godot 3.5+ addon
 
-Simple database that store you data in Config File format. One file - one table.
+Simple database that store you data in Config File format. One file - one table. Good for small data storage (~10mb). Tested with [GUT](https://github.com/bitwes/Gut)
 
 ### API (TableDB)
 
