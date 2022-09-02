@@ -75,10 +75,12 @@ func _ready():
   
   db.select().where('value','>=',7).update({name='updated_name'})
   db.select().where('id','>',2).where('id','<',4).delete()
+  db.select().whereIn('id',[1,2,3]).delete()
   db.select().whereCustom(funcref(self, '_where_custom')).take()
+  # ....
     
 func _where_custom(data: Dictionary):
-  return data["name"]=='hello'
+  return data["name"]=='hello0' || data["name"]=='hello1'
 ```
 
 
