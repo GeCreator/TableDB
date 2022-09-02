@@ -115,6 +115,14 @@ class Query:
 				'<=': _conditions.append(ConditionLowerOrEqual.new(field, equal))
 		return self
 	
+	func whereIn(field: String, equal: Array) -> Query:
+		_conditions.append(ConditionWhereIn.new(field, equal))
+		return self
+	
+	func whereNotIn(field: String, equal: Array) -> Query:
+		_conditions.append(ConditionWhereNotIn.new(field, equal))
+		return self
+	
 	func whereCustom(function: FuncRef) -> Query:
 		_conditions.append(ConditionCustom.new(function))
 		return self
@@ -200,6 +208,22 @@ class Query:
 		func _init(field: String, equal):
 			_field = field
 			_equal = equal
+
+	class ConditionWhereNotIn extends ConditionBase:
+		func _init(field: String, equal).(field, equal): pass
+		func check(data: Dictionary) -> bool:
+			for v in _equal:
+				if v==data[_field]:
+					return false
+			return true
+
+	class ConditionWhereIn extends ConditionBase:
+		func _init(field: String, equal).(field, equal): pass
+		func check(data: Dictionary) -> bool:
+			for v in _equal:
+				if v==data[_field]:
+					return true
+			return false
 	
 	class ConditionEqual extends ConditionBase:
 		func _init(field: String, equal).(field, equal): pass
