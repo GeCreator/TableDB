@@ -29,19 +29,19 @@ func _init(dbpath:String, password: String=''):
 		if int(id)>_last_insert_id:
 			_last_insert_id = int(id)
 
-func insert(data:Dictionary) -> String:
-	var id: String
+func insert(data:Dictionary) -> int:
+	var id: int
 	if 'id' in data:
-		id = str(data['id'])
+		id = int(data['id'])
 		data.erase('id')
 	else:
 		_last_insert_id+=1
-		id = str(_last_insert_id)
+		id = _last_insert_id
 	
 	if not has(int(id)): _count +=1
 	
 	for k in data:
-		_db.set_value(id, k, data[k])
+		_db.set_value(str(id), k, data[k])
 	emit_signal("changed")
 	return id
 
