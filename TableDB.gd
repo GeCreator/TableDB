@@ -160,15 +160,15 @@ class Query:
 			'custom': list.sort_custom(_custom_order_object, _custom_order_function)
 		
 		for row in list:
-			if offset>0:
-				offset-=1
-				continue
-			limit-=1
 			var passing: bool = true
 			for c in _conditions:
 				passing = passing && c.check(row)
 			
 			if passing:
+				if offset>0:
+					offset-=1
+					continue
+				limit-=1
 				if _use_selection_fields:
 					var filtred_row: Dictionary = {}
 					for f in _selection_fields:
