@@ -86,6 +86,12 @@ func save():
 	else:
 		_db.save_encrypted_pass(_path, _password)
 
+func saveTo(path:String):
+	var _p = _path
+	_path = path
+	save()
+	_path = _p
+
 func select(fields: Array = []) -> Query:
 	return Query.new(self, fields)
 
