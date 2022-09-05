@@ -112,7 +112,7 @@ class Query:
 	
 	func where(field: String, condition: String, equal) -> Query:
 		match(condition):
-				'=': _conditions.append(ConditionEqual.new(field, equal))
+				'=','==': _conditions.append(ConditionEqual.new(field, equal))
 				'!=': _conditions.append(ConditionNotEqual.new(field, equal))
 				'>':  _conditions.append(ConditionGreater.new(field, equal))
 				'>=':  _conditions.append(ConditionGreaterOrEqual.new(field, equal))
