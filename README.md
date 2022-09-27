@@ -31,6 +31,7 @@ Simple database that store you data in Config File format. One file - one table.
 | count() | int | Return selected count |
 | orderyBy(field: String, direction: String = 'asc') | TableDB.Query | Set sort by field (direction: 'asc'/'desc') |
 | orderByCustom(object, function: String) | TableDB.Query | Use custom sort function |
+| groupBy(field: String) | Dictionary | group result by field |
 | take(limit: int, offset: int) | Array | Return query result |
 
 ____
