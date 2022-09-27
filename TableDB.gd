@@ -192,6 +192,15 @@ class Query:
 		_order = 'custom'
 		return self
 	
+	func groupBy(field: String) -> Dictionary:
+		var result: Dictionary = {}
+		for v in take():
+			if v.has(field):
+				var key = v[field]
+				if not result.has(key): result[key] = Array()
+				result[key].append(v)
+		return result
+	
 	func _sort_by_asc(a, b):
 		return a[_order_field] < b[_order_field]
 	
