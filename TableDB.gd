@@ -10,7 +10,7 @@ var _last_insert_id: int
 var _password: String = ''
 var _count: int = 0
 
-func _init(dbpath:String, password: String=''):
+func _init(dbpath:String = '', password: String=''):
 	_db = ConfigFile.new()
 	_path = dbpath
 	
@@ -29,26 +29,27 @@ func _init(dbpath:String, password: String=''):
 		if int(id)>_last_insert_id:
 			_last_insert_id = int(id)
 
-func insert(data:Dictionary) -> int:
-	var id: int
+func insert(data:Dictionary) -> String:
+	var id: String
 	if 'id' in data:
-		id = int(data['id'])
+		id = str(data['id'])
 		data.erase('id')
+		if not has(id):
+			_count += 1
 	else:
+		_count += 1
 		_last_insert_id+=1
-		id = _last_insert_id
-	
-	if not has(int(id)): _count +=1
+		id = str(_last_insert_id)
 	
 	for k in data:
-		_db.set_value(str(id), k, data[k])
+		_db.set_value(id, k, data[k])
 	emit_signal("changed")
 	return id
 
-func remove(id:int) -> bool:
+func remove(id: String) -> bool:
 	if has(id):
 		_count -= 1
-		_db.erase_section(str(id))
+		_db.erase_section(id)
 		emit_signal("changed")
 		return true
 	return false
@@ -61,8 +62,8 @@ func truncate():
 	_count = 0
 	emit_signal("changed")
 
-func has(id: int) -> bool:
-	return _db.has_section(str(id)) 
+func has(id: String) -> bool:
+	return _db.has_section(id) 
 
 func find(id: String) -> Dictionary:
 	var result: Dictionary
@@ -74,13 +75,14 @@ func all() -> Array:
 	var result: Array
 	for id in _db.get_sections():
 		var row: Dictionary
-		row['id'] = int(id)
+		row['id'] = id
 		for key in _db.get_section_keys(id):
 			row[key] = _db.get_value(id, key)
 		result.append(row)
 	return result
 
 func save():
+	assert(_path!="")
 	if _password=='':
 		_db.save(_path)
 	else:
